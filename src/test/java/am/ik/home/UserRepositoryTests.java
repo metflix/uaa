@@ -19,41 +19,38 @@ import static org.assertj.core.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class MemberRepositoryTests {
+public class UserRepositoryTests {
     @Autowired
     TestEntityManager entityManager;
     @Autowired
-    MemberRepository memberRepository;
+    UserRepository memberRepository;
 
     @Test
     public void testFindByEmail() {
-        Member member = Member.builder()
+        User user = User.builder()
                 .email("foo@example.com")
-                .familyName("Yamada")
-                .givenName("Taro").build();
-        entityManager.persist(member);
-        Optional<Member> m = memberRepository.findByEmail("foo@example.com");
+                .username("foo").build();
+        entityManager.persist(user);
+        Optional<User> m = memberRepository.findByEmail("foo@example.com");
         assertThat(m.isPresent()).isTrue();
-        assertThat(m.get()).isEqualTo(member);
+        assertThat(m.get()).isEqualTo(user);
     }
 
 
     @Test
     public void testFindByIds() {
-        Member member1 = Member.builder()
+        User user1 = User.builder()
                 .email("foo@example.com")
-                .familyName("Yamada")
-                .givenName("Taro").build();
-        Member member2 = Member.builder()
+                .username("foo").build();
+        User user2 = User.builder()
                 .email("bar@example.com")
-                .familyName("Yamada")
-                .givenName("Hanako").build();
-        entityManager.persist(member1);
-        entityManager.persist(member2);
-        List<Member> m = memberRepository.findByIds(Arrays.asList(member1.getMemberId(), member2.getMemberId()));
+                .username("bar").build();
+        entityManager.persist(user1);
+        entityManager.persist(user2);
+        List<User> m = memberRepository.findByIds(Arrays.asList(user1.getUserId(), user2.getUserId()));
         assertThat(m).hasSize(2);
-        assertThat(m.get(0)).isEqualTo(member2);
-        assertThat(m.get(1)).isEqualTo(member1);
+        assertThat(m.get(0)).isEqualTo(user2);
+        assertThat(m.get(1)).isEqualTo(user1);
     }
 
     @Configuration

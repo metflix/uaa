@@ -1,6 +1,5 @@
 package am.ik.home;
 
-import com.fasterxml.jackson.datatype.jsr353.JSR353Module;
 import org.apache.catalina.filters.RequestDumperFilter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +43,12 @@ public class UaaApplication {
     }
 
     @Autowired
-    MemberRepository memberRepository;
+    UserRepository memberRepository;
 
     @Bean
-    UserDetailsService userDetailsService(MemberRepository memberRepository) {
+    UserDetailsService userDetailsService(UserRepository memberRepository) {
         return s -> memberRepository.findByEmail(s)
-                .map(MemberUserDetails::new)
+                .map(UaaUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("not found"));
     }
 
@@ -60,28 +59,26 @@ public class UaaApplication {
     }
 
     @Bean
-    InitializingBean init(MemberRepository memberRepository) {
+    InitializingBean init(UserRepository memberRepository) {
         return () -> {
-            Member member = new Member();
-            member.setEmail("maki@example.com");
-            member.setFamilyName("Maki");
-            member.setGivenName("Toshiaki");
-            member.setPassword("demo");
-            memberRepository.saveAndFlush(member);
+            memberRepository.save(User.builder()
+                    .username("making")
+                    .email("maki@example.com")
+                    .password("demo")
+                    .build());
+            memberRepository.save(User.builder()
+                    .username("tichimura")
+                    .email("tichimura@example.com")
+                    .password("demo")
+                    .build());
         };
     }
-
-    @Bean
-    JSR353Module jsr353Module() {
-        return new JSR353Module();
-    }
-
 
     @Configuration
     static class RestMvcConfig extends RepositoryRestConfigurerAdapter {
         @Override
         public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
-            config.exposeIdsFor(Member.class);
+            config.exposeIdsFor(User.class);
         }
     }
 

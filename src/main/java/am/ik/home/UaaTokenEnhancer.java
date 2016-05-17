@@ -13,13 +13,12 @@ import java.util.Map;
 public class UaaTokenEnhancer implements TokenEnhancer {
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-        MemberUserDetails userDetails = (MemberUserDetails) authentication.getPrincipal();
-        Member member = userDetails.getMember();
+        UaaUserDetails userDetails = (UaaUserDetails) authentication.getPrincipal();
+        User user = userDetails.getUser();
         Map<String, Object> additionalInfo = new LinkedHashMap<>();
-        additionalInfo.put("user_id", member.getMemberId().toString());
-        additionalInfo.put("family_name", member.getFamilyName());
-        additionalInfo.put("given_name", member.getGivenName());
-        additionalInfo.put("display_name", member.getFamilyName() + " " + member.getGivenName());
+        additionalInfo.put("username", user.getUsername());
+        additionalInfo.put("user_id", user.getUserId());
+        additionalInfo.put("email", user.getEmail());
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }

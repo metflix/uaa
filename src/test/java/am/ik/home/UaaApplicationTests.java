@@ -40,14 +40,11 @@ public class UaaApplicationTests {
 
         // issue token
         JsonNode res1 = restTemplate.exchange(req1, JsonNode.class).getBody();
-
         assertThat(res1.get("access_token").asText()).isNotEmpty();
         assertThat(res1.get("refresh_token").asText()).isNotEmpty();
         assertThat(res1.get("scope").asText()).isEqualTo("read write trust");
         assertThat(res1.get("expires_in").asLong()).isLessThan(TimeUnit.DAYS.toSeconds(1));
-        assertThat(res1.get("family_name").asText()).isEqualTo("Maki");
-        assertThat(res1.get("given_name").asText()).isEqualTo("Toshiaki");
-        assertThat(res1.get("display_name").asText()).isEqualTo("Maki Toshiaki");
+        assertThat(res1.get("username").asText()).isEqualTo("making");
         assertThat(res1.get("user_id").asText()).matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}");
     }
 
@@ -69,9 +66,7 @@ public class UaaApplicationTests {
         assertThat(res1.get("refresh_token").asText()).isNotEmpty();
         assertThat(res1.get("scope").asText()).isEqualTo("read");
         assertThat(res1.get("expires_in").asLong()).isLessThan(TimeUnit.HOURS.toSeconds(1));
-        assertThat(res1.get("family_name").asText()).isEqualTo("Maki");
-        assertThat(res1.get("given_name").asText()).isEqualTo("Toshiaki");
-        assertThat(res1.get("display_name").asText()).isEqualTo("Maki Toshiaki");
+        assertThat(res1.get("username").asText()).isEqualTo("making");
         assertThat(res1.get("user_id").asText()).matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}");
     }
 
@@ -113,16 +108,15 @@ public class UaaApplicationTests {
 
         // get member
         RequestEntity<?> req2 = RequestEntity.get(UriComponentsBuilder.fromUriString(uri)
-                .pathSegment("api", "members", "search", "findByEmail")
+                .pathSegment("api", "users", "search", "findByEmail")
                 .queryParam("email", "maki@example.com")
                 .build().toUri())
                 .header("Authorization", "Bearer " + accessToken)
                 .build();
         JsonNode res2 = restTemplate.exchange(req2, JsonNode.class).getBody();
         System.out.println(res2);
-        assertThat(res2.get("memberId").asText()).matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}");
-        assertThat(res2.get("givenName").asText()).isEqualTo("Toshiaki");
-        assertThat(res2.get("familyName").asText()).isEqualTo("Maki");
+        assertThat(res2.get("userId").asText()).matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}");
+        assertThat(res2.get("username").asText()).isEqualTo("making");
         assertThat(res2.get("email").asText()).isEqualTo("maki@example.com");
     }
 
@@ -143,7 +137,7 @@ public class UaaApplicationTests {
 
         // get member
         RequestEntity<?> req2 = RequestEntity.get(UriComponentsBuilder.fromUriString(uri)
-                .pathSegment("api", "members", "search", "findByEmail")
+                .pathSegment("api", "users", "search", "findByEmail")
                 .queryParam("email", "maki@example.com")
                 .build().toUri())
                 .header("Authorization", "Bearer " + accessToken)
@@ -172,17 +166,16 @@ public class UaaApplicationTests {
 
         // get member
         RequestEntity<?> req3 = RequestEntity.get(UriComponentsBuilder.fromUriString(uri)
-                .pathSegment("api", "members", "search", "findByIds")
+                .pathSegment("api", "users", "search", "findByIds")
                 .queryParam("ids", res1.get("user_id").asText())
                 .queryParam("ids", "00000000-0000-0000-0000-000000000000")
                 .build().toUri())
                 .header("Authorization", "Bearer " + accessToken)
                 .build();
         JsonNode res3 = restTemplate.exchange(req3, JsonNode.class).getBody();
-        assertThat(res3.get("_embedded").get("members")).hasSize(1);
-        assertThat(res3.get("_embedded").get("members").get(0).get("memberId").asText()).matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}");
-        assertThat(res3.get("_embedded").get("members").get(0).get("givenName").asText()).isEqualTo("Toshiaki");
-        assertThat(res3.get("_embedded").get("members").get(0).get("familyName").asText()).isEqualTo("Maki");
-        assertThat(res3.get("_embedded").get("members").get(0).get("email").asText()).isEqualTo("maki@example.com");
+        assertThat(res3.get("_embedded").get("users")).hasSize(1);
+        assertThat(res3.get("_embedded").get("users").get(0).get("userId").asText()).matches("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}");
+        assertThat(res3.get("_embedded").get("users").get(0).get("username").asText()).isEqualTo("making");
+        assertThat(res3.get("_embedded").get("users").get(0).get("email").asText()).isEqualTo("maki@example.com");
     }
 }

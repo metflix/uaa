@@ -15,18 +15,14 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member implements Serializable {
+public class User implements Serializable {
     @Id
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @GeneratedValue(generator = "uuid")
     @Column(columnDefinition = "varchar(36)")
-    private String memberId;
-
-    private String givenName;
-    private String familyName;
-
+    private String userId;
+    private String username;
     @JsonIgnore
     private String password;
-
     private String email;
 }
