@@ -1,4 +1,4 @@
-package am.ik.home;
+package com.metflix.uaa;
 
 import org.apache.catalina.filters.RequestDumperFilter;
 import org.springframework.beans.factory.InitializingBean;

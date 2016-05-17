@@ -1,4 +1,4 @@
-package am.ik.home;
+package com.metflix.uaa;
 
 import org.springframework.security.core.authority.AuthorityUtils;
 

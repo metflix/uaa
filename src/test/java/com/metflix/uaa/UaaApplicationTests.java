@@ -1,4 +1,4 @@
-package am.ik.home;
+package com.metflix.uaa;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.Rule;

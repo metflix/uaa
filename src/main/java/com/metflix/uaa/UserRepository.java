@@ -1,4 +1,4 @@
-package am.ik.home;
+package com.metflix.uaa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

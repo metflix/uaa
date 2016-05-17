@@ -1,5 +1,6 @@
-package am.ik.home;
+package com.metflix.uaa;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -48,7 +49,7 @@ public class UserRepositoryTests {
         entityManager.persist(user1);
         entityManager.persist(user2);
         List<User> m = memberRepository.findByIds(Arrays.asList(user1.getUserId(), user2.getUserId()));
-        assertThat(m).hasSize(2);
+        Assertions.assertThat(m).hasSize(2);
         assertThat(m.get(0)).isEqualTo(user2);
         assertThat(m.get(1)).isEqualTo(user1);
     }
